@@ -1,14 +1,19 @@
 package com.codepath.apps.restclienttemplate;
 
+import android.content.Intent;
 import android.icu.text.SimpleDateFormat;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -24,6 +29,8 @@ import java.util.Locale;
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.ParseException;
 
+import static com.codepath.apps.restclienttemplate.LoginActivity.NEW_TWEET_REQUEST;
+
 public class TimelineActivity extends AppCompatActivity {
 
     TwitterClient client;
@@ -38,6 +45,9 @@ public class TimelineActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowHomeEnabled(true);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
 
@@ -128,4 +138,39 @@ public class TimelineActivity extends AppCompatActivity {
     }
 
 
+    // Inflate the menu; this adds items to the action bar if it is present.
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.login, menu);
+        return true;
+    }
+
+    public void newTweet(MenuItem item) {
+        Intent newTweetIntent = new Intent(this, NewTweetActivity.class);
+        startActivityForResult(newTweetIntent, NEW_TWEET_REQUEST);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+        if (requestCode == NEW_TWEET_REQUEST) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                Log.d("Response : ", data.getExtras().getString("result"));
+                try {
+                    Tweet newTweet = Tweet.fromJson(new JSONObject(data.getExtras().getString("result")));
+                    System.out.println("****TWEET DETAILS***" + newTweet.createdAt);
+                    System.out.println(newTweet.user);
+                    System.out.println(newTweet.body);
+                    System.out.println(newTweet.relativeTime);
+                    tweets.add(newTweet);
+                    tweetAdapter.notifyItemInserted(tweets.size() - 1);
+                    tweetAdapter.notifyDataSetChanged();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 }
