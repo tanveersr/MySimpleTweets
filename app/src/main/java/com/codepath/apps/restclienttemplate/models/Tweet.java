@@ -40,7 +40,7 @@ public class Tweet {
 
     // getRelativeTimeAgo("Mon Apr 01 21:16:23 +0000 2014");
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public static String getRelativeTimeAgo(String rawJsonDate) {
+    public static String getRelativeTimeAgo(String rawJsonDate) { 
         String twitterFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
         SimpleDateFormat sf = new SimpleDateFormat(twitterFormat, Locale.ENGLISH);
         sf.setLenient(true);
