@@ -31,10 +31,15 @@ public class TimelineActivity extends AppCompatActivity {
     ArrayList<Tweet> tweets;
     RecyclerView rvTweets;
 
+    // Store a member variable for the listener
+    private EndlessRecyclerViewScrollListener scrollListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
 
         client = TwitterApp.getRestClient();
 
@@ -45,11 +50,25 @@ public class TimelineActivity extends AppCompatActivity {
         // construct the adapter from the datasource
         tweetAdapter = new TweetAdapter(tweets);
         // RecyclerView setup
-        rvTweets.setLayoutManager(new LinearLayoutManager(this));
+        rvTweets.setLayoutManager(linearLayoutManager);
         // set the adapter
         rvTweets.setAdapter(tweetAdapter);
 
         populateTimeline();
+
+        // Retain an instance so that you can call `resetState()` for fresh searches
+        scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                // Triggered only when new data needs to be appended to the list
+                // Add whatever code is needed to append new items to the bottom of the list
+                populateTimeline();
+            }
+        };
+        // Adds the scroll listener to RecyclerView
+        rvTweets.addOnScrollListener(scrollListener);
+
+
     }
 
     private void populateTimeline(){
@@ -60,6 +79,7 @@ public class TimelineActivity extends AppCompatActivity {
                 Log.d("TwitterClient", responseString);
             }
 
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
 //                Toast.makeText(getApplicationContext(),"Success",Toast.LENGTH_LONG).show();
