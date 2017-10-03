@@ -25,6 +25,7 @@ import org.json.JSONObject;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Locale;
 
 import cz.msebera.android.httpclient.Header;
@@ -103,7 +104,8 @@ public class TimelineActivity extends AppCompatActivity {
                     try {
                         tweet = Tweet.fromJson(response.getJSONObject(i));
                         tweets.add(tweet);
-                        tweetAdapter.notifyItemInserted(tweets.size() - 1);
+                        tweetAdapter.notifyDataSetChanged();
+//                        tweetAdapter.notifyItemInserted(tweets.size() - 1);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -163,6 +165,7 @@ public class TimelineActivity extends AppCompatActivity {
                 try {
                     Tweet newTweet = Tweet.fromJson(new JSONObject(data.getExtras().getString("result")));
                     tweets.add(newTweet);
+                    Collections.sort(tweets);
                     tweetAdapter.notifyItemRangeChanged(0, tweets.size());
                 } catch (JSONException e) {
                     e.printStackTrace();
