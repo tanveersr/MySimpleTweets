@@ -13,6 +13,7 @@ import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.codepath.apps.restclienttemplate.models.Tweet;
@@ -37,6 +38,7 @@ public class TimelineActivity extends AppCompatActivity {
     TweetAdapter tweetAdapter;
     ArrayList<Tweet> tweets;
     RecyclerView rvTweets;
+    LinearLayoutManager linearLayoutManager;
 
     // Store a member variable for the listener
     private EndlessRecyclerViewScrollListener scrollListener;
@@ -49,7 +51,7 @@ public class TimelineActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowHomeEnabled(true);
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager = new LinearLayoutManager(this);
 
         client = TwitterApp.getRestClient();
 
@@ -160,13 +162,8 @@ public class TimelineActivity extends AppCompatActivity {
                 Log.d("Response : ", data.getExtras().getString("result"));
                 try {
                     Tweet newTweet = Tweet.fromJson(new JSONObject(data.getExtras().getString("result")));
-                    System.out.println("****TWEET DETAILS***" + newTweet.createdAt);
-                    System.out.println(newTweet.user);
-                    System.out.println(newTweet.body);
-                    System.out.println(newTweet.relativeTime);
                     tweets.add(newTweet);
-                    tweetAdapter.notifyItemInserted(tweets.size() - 1);
-                    tweetAdapter.notifyDataSetChanged();
+                    tweetAdapter.notifyItemRangeChanged(0, tweets.size());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
