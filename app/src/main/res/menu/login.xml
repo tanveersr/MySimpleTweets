@@ -4,7 +4,6 @@
         android:id="@+id/action_refresh"
         android:icon="@drawable/tweetimage"
         app:showAsAction="ifRoom"
-        android:title=""
-        android:onClick="newTweet"/>
+        android:title="" />
 
 </menu>

@@ -12,7 +12,7 @@ import com.codepath.oauth.OAuthLoginActionBarActivity;
 
 public class LoginActivity extends OAuthLoginActionBarActivity<TwitterClient> {
 
-	static final int NEW_TWEET_REQUEST = 1;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

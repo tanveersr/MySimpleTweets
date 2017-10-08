@@ -59,7 +59,7 @@ public class Tweet implements Comparable<Tweet> {
 
     public long getRelativeTimeInSeconds(String rTime) {
 
-        long res=0;
+        long res;
         String[] relTimeStrArr = rTime.split("\\s+");
         int num;
         String unit;
@@ -69,7 +69,6 @@ public class Tweet implements Comparable<Tweet> {
         } catch(Exception e){
             return 0;
         }
-
 
         switch(unit) {
             case "minutes":
