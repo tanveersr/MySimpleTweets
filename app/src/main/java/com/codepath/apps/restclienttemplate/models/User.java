@@ -13,6 +13,9 @@ public class User {
     public Long uid;
     public String screenName;
     public String profileImageUrl;
+    public String tagLine;
+    public int followersCount;
+    public int followingCount;
 
     // de-serialize the json
     public static User fromJson(JSONObject jsonObject) throws JSONException {
@@ -22,7 +25,9 @@ public class User {
         user.uid = jsonObject.getLong("id");
         user.screenName = "@"+jsonObject.getString("screen_name");
         user.profileImageUrl = jsonObject.getString("profile_image_url");
-
+        user.tagLine = jsonObject.getString("description");
+        user.followersCount = jsonObject.getInt("followers_count");
+        user.followingCount = jsonObject.getInt("friends_count");
         return user;
     }
 
