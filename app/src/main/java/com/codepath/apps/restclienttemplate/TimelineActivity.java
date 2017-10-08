@@ -53,14 +53,17 @@ public class TimelineActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(vPager);
     }
 
-
-
-
     // Inflate the menu; this adds items to the action bar if it is present.
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.login, menu);
+        getMenuInflater().inflate(R.menu.menu_timeline, menu);
         return true;
+    }
+
+    public void onProfileView(MenuItem item) {
+
+        Intent intentProfileActivity = new Intent(this, ProfileActivity.class);
+        startActivity(intentProfileActivity);
     }
 
 //    public void newTweet(MenuItem item) {
