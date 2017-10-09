@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.codepath.apps.restclienttemplate.EndlessRecyclerViewScrollListener;
 import com.codepath.apps.restclienttemplate.R;
@@ -32,8 +33,12 @@ import static android.app.Activity.RESULT_OK;
  * Created by trandhawa on 10/4/17.
  */
 
-public class TweetsListFragment extends Fragment {
+public class TweetsListFragment extends Fragment implements TweetAdapter.TweetAdapterListener{
 
+    public interface TweetSelectedListener {
+        // handle tweet selection
+        public void onTweetSelected(Tweet tweet);
+    }
     TweetAdapter tweetAdapter;
     ArrayList<Tweet> tweets;
     RecyclerView rvTweets;
@@ -55,7 +60,7 @@ public class TweetsListFragment extends Fragment {
         // init the arraylist (data source)
         tweets = new ArrayList<>();
         // construct the adapter from the datasource
-        tweetAdapter = new TweetAdapter(tweets);
+        tweetAdapter = new TweetAdapter(tweets, this);
         // RecyclerView setup
         linearLayoutManager = new LinearLayoutManager(getContext());
         rvTweets.setLayoutManager(linearLayoutManager);
@@ -93,4 +98,9 @@ public class TweetsListFragment extends Fragment {
     }
 
 
+    @Override
+    public void onItemSelected(View view, int position) {
+        Tweet tweet = tweets.get(position);
+        ((TweetSelectedListener) getActivity()).onTweetSelected(tweet);
+    }
 }

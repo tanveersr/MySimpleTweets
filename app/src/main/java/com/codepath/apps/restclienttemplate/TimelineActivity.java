@@ -35,7 +35,7 @@ import java.util.Locale;
 
 import cz.msebera.android.httpclient.Header;
 
-public class TimelineActivity extends AppCompatActivity {
+public class TimelineActivity extends AppCompatActivity implements TweetsListFragment.TweetSelectedListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +64,11 @@ public class TimelineActivity extends AppCompatActivity {
 
         Intent intentProfileActivity = new Intent(this, ProfileActivity.class);
         startActivity(intentProfileActivity);
+    }
+
+    @Override
+    public void onTweetSelected(Tweet tweet) {
+        Toast.makeText(this, tweet.body, Toast.LENGTH_LONG).show();
     }
 
 //    public void newTweet(MenuItem item) {
