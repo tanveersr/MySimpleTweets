@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.codepath.apps.restclienttemplate.fragments.UserTimelineFragment;
@@ -71,6 +72,39 @@ public class ProfileActivity extends AppCompatActivity {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    // deserialize the user object
+                    User user = null;
+                    try {
+                        user = User.fromJson(response);
+                        getSupportActionBar().setTitle(user.name);
+                        populateUserHeadline(user);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                    Toast.makeText(getApplicationContext(), responseString, Toast.LENGTH_LONG).show();
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    Toast.makeText(getApplicationContext(), responseString, Toast.LENGTH_LONG).show();
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    Toast.makeText(getApplicationContext(), errorResponse.toString(), Toast.LENGTH_LONG).show();
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                    Toast.makeText(getApplicationContext(), errorResponse.toString(), Toast.LENGTH_LONG).show();
                 }
             });
         }

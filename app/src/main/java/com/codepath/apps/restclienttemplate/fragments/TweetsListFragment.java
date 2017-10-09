@@ -69,17 +69,6 @@ public class TweetsListFragment extends Fragment implements TweetAdapter.TweetAd
         // set the adapter
         rvTweets.setAdapter(tweetAdapter);
 
-//        // Retain an instance so that you can call `resetState()` for fresh searches
-//        scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
-//            @Override
-//            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-//                // Triggered only when new data needs to be appended to the list
-//                // Add whatever code is needed to append new items to the bottom of the list
-//                populateTimeline();
-//            }
-//        };
-//        // Adds the scroll listener to RecyclerView
-//        rvTweets.addOnScrollListener(scrollListener);
         return v;
     }
 

@@ -4,8 +4,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
+import com.codepath.apps.restclienttemplate.EndlessRecyclerViewScrollListener;
 import com.codepath.apps.restclienttemplate.TwitterApp;
 import com.codepath.apps.restclienttemplate.TwitterClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -22,12 +27,34 @@ import cz.msebera.android.httpclient.Header;
 public class HomeTimelineFragment extends TweetsListFragment {
 
     TwitterClient client;
+    // Store a member variable for the listener
+    private EndlessRecyclerViewScrollListener scrollListener;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         client = TwitterApp.getRestClient();
         populateTimeline();
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        super.onCreateView(inflater, container, savedInstanceState);
+        // Retain an instance so that you can call `resetState()` for fresh searches
+        scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                // Triggered only when new data needs to be appended to the list
+                // Add whatever code is needed to append new items to the bottom of the list
+                populateTimeline();
+            }
+        };
+        // Adds the scroll listener to RecyclerView
+        rvTweets.addOnScrollListener(scrollListener);
+
+        return rvTweets;
     }
 
     private void populateTimeline(){

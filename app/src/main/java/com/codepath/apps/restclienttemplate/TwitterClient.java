@@ -83,8 +83,6 @@ public class TwitterClient extends OAuthBaseClient {
 		RequestParams params = new RequestParams();
 		params.put("screen_name", screenName);
 		client.get(apiUrl, params, handler);
-
-		getUserTimeline(screenName, handler);
 	}
 
 	/* 1. Define the endpoint URL with getApiUrl and pass a relative path to the endpoint
@@ -103,5 +101,4 @@ public class TwitterClient extends OAuthBaseClient {
 		params.put("status", tweetMsg);
 		client.post(apiUrl, params, handler);
 	}
-
 }
