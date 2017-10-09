@@ -37,7 +37,9 @@ public class TweetsListFragment extends Fragment implements TweetAdapter.TweetAd
 
     public interface TweetSelectedListener {
         // handle tweet selection
-        public void onTweetSelected(Tweet tweet);
+        void onTweetSelected(Tweet tweet);
+        // handle tweet image click
+        void onTweetImageClick(Tweet tweet);
     }
     TweetAdapter tweetAdapter;
     ArrayList<Tweet> tweets;
@@ -103,4 +105,5 @@ public class TweetsListFragment extends Fragment implements TweetAdapter.TweetAd
         Tweet tweet = tweets.get(position);
         ((TweetSelectedListener) getActivity()).onTweetSelected(tweet);
     }
+
 }

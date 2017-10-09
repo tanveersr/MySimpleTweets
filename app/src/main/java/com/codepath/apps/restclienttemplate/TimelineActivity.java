@@ -16,6 +16,7 @@ import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
@@ -61,15 +62,26 @@ public class TimelineActivity extends AppCompatActivity implements TweetsListFra
     }
 
     public void onProfileView(MenuItem item) {
-
         Intent intentProfileActivity = new Intent(this, ProfileActivity.class);
+        intentProfileActivity.putExtra("isLoggedInUser", true);
         startActivity(intentProfileActivity);
     }
 
     @Override
     public void onTweetSelected(Tweet tweet) {
-        Toast.makeText(this, tweet.body, Toast.LENGTH_LONG).show();
+        Intent intentProfileActivity = new Intent(this, ProfileActivity.class);
+        intentProfileActivity.putExtra("screen_name", tweet.user.screenName);
+        intentProfileActivity.putExtra("isLoggedInUser", false);
+        startActivity(intentProfileActivity);
     }
+
+    @Override
+    public void onTweetImageClick(Tweet tweet) {
+        Intent intentProfileActivity = new Intent(this, ProfileActivity.class);
+        intentProfileActivity.putExtra("isLoggedInUser", false);
+        startActivity(intentProfileActivity);
+    }
+
 
 //    public void newTweet(MenuItem item) {
 //        Intent newTweetIntent = new Intent(this, NewTweetActivity.class);

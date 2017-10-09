@@ -11,6 +11,7 @@ import com.codepath.apps.restclienttemplate.fragments.UserTimelineFragment;
 import com.codepath.apps.restclienttemplate.models.User;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -19,6 +20,7 @@ import cz.msebera.android.httpclient.Header;
 public class ProfileActivity extends AppCompatActivity {
 
     TwitterClient client;
+    boolean isLoggedInUser = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +28,7 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
 
         String screenName = getIntent().getStringExtra("screen_name");
+        isLoggedInUser = getIntent().getBooleanExtra("isLoggedInUser", false);
         // create the user fragment
         UserTimelineFragment userTimelineFragment = UserTimelineFragment.newInstance(screenName);
 
@@ -40,23 +43,37 @@ public class ProfileActivity extends AppCompatActivity {
         ft.commit();
 
         client = TwitterApp.getRestClient();
-        client.getUserInfo(new JsonHttpResponseHandler(){
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                // deserialize the user object
-                User user = null;
-                try {
-                    user = User.fromJson(response);
-                    getSupportActionBar().setTitle(user.screenName);
-                    populateUserHeadline(user);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+        if(isLoggedInUser) {
+            client.getUserInfo(new JsonHttpResponseHandler(){
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    // deserialize the user object
+                    User user = null;
+                    try {
+                        user = User.fromJson(response);
+                        getSupportActionBar().setTitle(user.screenName);
+                        populateUserHeadline(user);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
-
-
-
-            }
-        });
+            });
+        } else {
+            client.getAnotherUserInfo(screenName, new JsonHttpResponseHandler(){
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                    // deserialize the user object
+                    User user = null;
+                    try {
+                        user = User.fromJson(response.getJSONObject(0));
+                        getSupportActionBar().setTitle(user.name);
+                        populateUserHeadline(user);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
     }
 
     public void populateUserHeadline(User user){
@@ -72,6 +89,5 @@ public class ProfileActivity extends AppCompatActivity {
         tvFollowers.setText(user.followersCount+" Followers");
         tvFollowing.setText(user.followingCount+" Following");
         Glide.with(this).load(user.profileImageUrl).into(ivProfileImage);
-
     }
 }
